@@ -1,24 +1,61 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useForm } from "./useForm";
+
+type Form = {
+  name: string;
+  age: string;
+  height: string;
+};
 
 function App() {
+  const { data, errors, handleChange, handleSubmit } = useForm<Form>({
+    validations: {
+      name: {
+        required: {
+          value: true,
+          message: "Name is required!",
+        },
+      },
+      age: {
+        required: {
+          value: true,
+          message: "Age is required!",
+        },
+        pattern: {
+          value: "^[0-9]{1,3}$",
+          message: "Age is not in the correct pattern!",
+        },
+      },
+      height: {
+        required: {
+          value: true,
+          message: "Height is required!",
+        },
+      },
+    },
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Validation example</h1>
+      <form onSubmit={handleSubmit}>
+        Name
+        <input name="name" value={data.name} onChange={handleChange("name")} />
+        Age
+        <input name="age" value={data.age} onChange={handleChange("age")} />
+        Height
+        <input
+          name="height"
+          value={data.height}
+          onChange={handleChange("height")}
+        />
+        <button type="submit">Submit</button>
+      </form>
+      <div className="errors">
+        {errors.name}<br />
+        {errors.age}<br />
+        {errors.height}
+      </div>
     </div>
   );
 }
